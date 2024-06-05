@@ -1,8 +1,8 @@
 const { AdaptiveCards } = require("@microsoft/adaptivecards-tools");
 const { CardFactory, MessageFactory } = require("botbuilder");
 
-class Search {
-  triggerPatterns = ["find file", "find -f"];
+class SearchTeams {
+  triggerPatterns = ["find message", "find -m"];
 
   async handleCommandReceived(context, message) {
     // verify the command arguments which are received from the client if needed.
@@ -14,12 +14,12 @@ class Search {
     async function performSearch(queryStringg) {
       const searchEndpoint = "https://graph.microsoft.com/v1.0/search/query";
       const authToken =
-        "eyJ0eXAiOiJKV1QiLCJub25jZSI6IlFUTlhDeUVGLVN4bUZqTDRDcUNpQ09sTWVoRlJYeFpFM1BxajR4N05Nc2siLCJhbGciOiJSUzI1NiIsIng1dCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCIsImtpZCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8wMjFlZGI4Ni04NzU4LTRjNTYtOTM3Ny00ZTY2ZDIxOTZmYzAvIiwiaWF0IjoxNzE3NTMxMzQ1LCJuYmYiOjE3MTc1MzEzNDUsImV4cCI6MTcxNzYxODA0NSwiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhXQUFBQVgzd2wvajNTeTdCUGFoVlFSUlBOMUd6R3psczA3VXlRVnRoaVcwdDZNNTlKZkpzWmk5UVpaSkNBMVRSeGxNUVZaZXR1RkJhbmRNcmZVQUY3STNDYk81WUFXbFhrS1MxRFVUbkNJZkRrclhrPSIsImFtciI6WyJwd2QiLCJtZmEiXSwiYXBwX2Rpc3BsYXluYW1lIjoiR3JhcGggRXhwbG9yZXIiLCJhcHBpZCI6ImRlOGJjOGI1LWQ5ZjktNDhiMS1hOGFkLWI3NDhkYTcyNTA2NCIsImFwcGlkYWNyIjoiMCIsImZhbWlseV9uYW1lIjoiVW5ndXJlYW51IiwiZ2l2ZW5fbmFtZSI6IkFsZXgiLCJpZHR5cCI6InVzZXIiLCJpcGFkZHIiOiIxNDIuMTEyLjIzLjg3IiwibmFtZSI6IkFsZXggVW5ndXJlYW51Iiwib2lkIjoiNGI2MGU4MzQtNTJkOC00MDRjLWEyYzItZDkxNThjNDgxOWU4IiwicGxhdGYiOiIzIiwicHVpZCI6IjEwMDMyMDAzN0I4NDI4OTgiLCJyaCI6IjAuQVdJQWh0c2VBbGlIVmt5VGQwNW0waGx2d0FNQUFBQUFBQUFBd0FBQUFBQUFBQUNNQUFRLiIsInNjcCI6IkZpbGVzLlJlYWQuQWxsIG9wZW5pZCBwcm9maWxlIFVzZXIuUmVhZCBlbWFpbCBTaXRlcy5SZWFkLkFsbCIsInNpZ25pbl9zdGF0ZSI6WyJrbXNpIl0sInN1YiI6IlBjT1pRY0hNbEJpTEJ1SHV4UEphSTFySllXeVNncU5ULXE0dVpXTmZRaWsiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiTkEiLCJ0aWQiOiIwMjFlZGI4Ni04NzU4LTRjNTYtOTM3Ny00ZTY2ZDIxOTZmYzAiLCJ1bmlxdWVfbmFtZSI6ImFsZXhAYXVnc2lnbmFscy5jb20iLCJ1cG4iOiJhbGV4QGF1Z3NpZ25hbHMuY29tIiwidXRpIjoibFY2RjFLTTVmVXFyZTZHbmZoWHZBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sInhtc19jYyI6WyJDUDEiXSwieG1zX3NzbSI6IjEiLCJ4bXNfc3QiOnsic3ViIjoiTWRhX1FjZ0Y4SkxwclZoWGE4RC1rNlJVZExZemhwa0V4SmZFamh4MFNwSSJ9LCJ4bXNfdGNkdCI6MTU2NDU4NTExNn0.KJE1JgZt9e0mee8mv72QbKSGiB_FCqg_-J9G3dABneX1AW_bH1egJCsrgqTa1n4AarWsR0nkwFK9cWc8zkpkRKqDhjGXacD5EWYyKwE-zn9WBQ4LLO8DQQ_UsIum9HCXpTrfytS1syb2WFzQNfxiv_yYconmvJJ_kAYbJa6pB-o_N14v53jzkOlOJtWMTKDwrAYUq4fVwIP6xEuYAYPRMGVM7FvGA2ibToNkQo6zfu3PsllWA6JiVjGEGPVmodQeV4i9kFyFcfiy8Nc10nezuEIJ-1wlGPoCgYQSkESflxpqlV80QJUh73s0wnVu3_17LJ_VPjumZVP-tvcAZo52mQ";
+        "eyJ0eXAiOiJKV1QiLCJub25jZSI6InlvSTBmbG5EMDFOTnFFMEtfSkFTOHViYnZBTzVkQmd4dEx1REk3dm5TSkUiLCJhbGciOiJSUzI1NiIsIng1dCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCIsImtpZCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8wMjFlZGI4Ni04NzU4LTRjNTYtOTM3Ny00ZTY2ZDIxOTZmYzAvIiwiaWF0IjoxNzE3NTk3NDQzLCJuYmYiOjE3MTc1OTc0NDMsImV4cCI6MTcxNzY4NDE0MywiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhXQUFBQStiWXFjU0hrN3IxZ2N1eHJkM0JwYi84Mm9nOXNaellqTEcyQngzbGtONi9rc1RsbkVldnBtZUcvUzMyUWZGL0toVmNlNk1zQTRxblhkUllaK01kdVpOZzRQRlNsSGE1U2ltUTNjMG5ueGVzPSIsImFtciI6WyJwd2QiLCJtZmEiXSwiYXBwX2Rpc3BsYXluYW1lIjoiR3JhcGggRXhwbG9yZXIiLCJhcHBpZCI6ImRlOGJjOGI1LWQ5ZjktNDhiMS1hOGFkLWI3NDhkYTcyNTA2NCIsImFwcGlkYWNyIjoiMCIsImZhbWlseV9uYW1lIjoiVW5ndXJlYW51IiwiZ2l2ZW5fbmFtZSI6IkFsZXgiLCJpZHR5cCI6InVzZXIiLCJpcGFkZHIiOiIxNDIuMTEyLjIzLjg3IiwibmFtZSI6IkFsZXggVW5ndXJlYW51Iiwib2lkIjoiNGI2MGU4MzQtNTJkOC00MDRjLWEyYzItZDkxNThjNDgxOWU4IiwicGxhdGYiOiIzIiwicHVpZCI6IjEwMDMyMDAzN0I4NDI4OTgiLCJyaCI6IjAuQVdJQWh0c2VBbGlIVmt5VGQwNW0waGx2d0FNQUFBQUFBQUFBd0FBQUFBQUFBQUNNQUFRLiIsInNjcCI6IkNhbGVuZGFycy5SZWFkIENoYW5uZWxNZXNzYWdlLlJlYWQuQWxsIENoYXQuUmVhZCBFeHRlcm5hbEl0ZW0uUmVhZC5BbGwgRmlsZXMuUmVhZC5BbGwgTWFpbC5SZWFkIG9wZW5pZCBwcm9maWxlIFNpdGVzLlJlYWQuQWxsIFVzZXIuUmVhZCBlbWFpbCIsInNpZ25pbl9zdGF0ZSI6WyJrbXNpIl0sInN1YiI6IlBjT1pRY0hNbEJpTEJ1SHV4UEphSTFySllXeVNncU5ULXE0dVpXTmZRaWsiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiTkEiLCJ0aWQiOiIwMjFlZGI4Ni04NzU4LTRjNTYtOTM3Ny00ZTY2ZDIxOTZmYzAiLCJ1bmlxdWVfbmFtZSI6ImFsZXhAYXVnc2lnbmFscy5jb20iLCJ1cG4iOiJhbGV4QGF1Z3NpZ25hbHMuY29tIiwidXRpIjoiTDVZa2hub2xtRVdmdlgxbi1HejVBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiZjI4YTFmNTAtZjZlNy00NTcxLTgxOGItNmExMmYyYWY2YjZjIiwiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sInhtc19jYyI6WyJDUDEiXSwieG1zX3NzbSI6IjEiLCJ4bXNfc3QiOnsic3ViIjoiTWRhX1FjZ0Y4SkxwclZoWGE4RC1rNlJVZExZemhwa0V4SmZFamh4MFNwSSJ9LCJ4bXNfdGNkdCI6MTU2NDU4NTExNn0.gIZZ_l2H0wzfi0JVpX_Q16GZezNfESpDkXCQ06hjzqWqQhl9maJcuOHc5Y1UtmFMA8Si-XATbNm07lnHUjAzmTKi6K9LruFiiD1GQYL3YYI_VvNLnZdLPuwbD3xy3ndnlwWBTrjr_RIEIWf_qiBm5qaEsOtw60AtOe41FlBvDGP1pxcFPCnibHx6z3rkJRRcUfj-fo3skAv0S_2jTCcWSUcNE_ulWsuv-we3aYkNxI6W9VafwKlRaLqUnFBG-I6yjmSY9nlsv66gcdJ1_XqfdSbb_k3Nmb56DPknI3Vsffdxwn-DPWcvwaTY1Twp82GAS2euBzeFWMCOq93oAMFOHA";
 
       const requestBody = {
         requests: [
           {
-            entityTypes: ["driveItem"],
+            entityTypes: ["chatMessage"],
             query: {
               queryString: queryStringg,
             },
@@ -43,7 +43,21 @@ class Search {
       return result;
     }
 
-    const searchResults = await performSearch(message.text.split(" ").slice(1).slice(1).join(" "));
+    let length = 10;
+
+    let query;
+
+    if (message.text.split(" ").includes("--limit")) {
+      query = message.text.split(" ").slice(1).slice(1).slice(0,-1).filter(e => e !== "--limit").join(" ");
+      length = message.text.split(" ")[message.text.split(" ").length - 1];
+      if(length == "all" || length == "ALL"){length = 1000}
+    } else {
+        query = message.text.split(" ").slice(1).slice(1).join(" ");
+    }
+
+    const searchResults = await performSearch(query);
+
+    console.log(query);
 
     let cardData;
     let searchURL;
@@ -59,11 +73,14 @@ class Search {
 
     let i = 0;
 
+    console.log(searchResults);
+
     if (searchResults.value[0].hitsContainers[0].total != 0) {
       await searchResults.value[0].hitsContainers[0].hits.forEach((result) => {
         i++;
+        console.log(length);
         console.log(result);
-        if(i <= 10){allResults.push({
+        if(i <= length){allResults.push({
           type: "Container",
           items: [
             {
@@ -78,7 +95,7 @@ class Search {
                 {
                   type: "Action.OpenUrl",
                   title: "Open Link",
-                  url: `${result.resource.webUrl}`,
+                  url: `${result.resource.webLink}`,
                 },
               ],
             },
@@ -125,5 +142,5 @@ class Search {
 }
 
 module.exports = {
-  Search,
+  SearchTeams,
 };
